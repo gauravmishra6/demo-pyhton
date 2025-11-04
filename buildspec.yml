@@ -1,11 +1,30 @@
 version: 0.2
+
 phases:
   install:
     commands:
-      - echo Installing dependencies...
-      - pip install opencv-python
-      - pip install -r requirements.txt  # if you have a requirements file
+      - echo "Updating pip..."
+      - pip install --upgrade pip
+      - echo "Installing dependencies..."
+      # Install OpenCV and numpy explicitly
+      - pip install opencv-python numpy
+      # If requirements.txt exists, install from it
+      - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+  pre_build:
+    commands:
+      - echo "Pre-build phase completed."
+
   build:
     commands:
-      - echo Starting build...
+      - echo "Starting build..."
       - python HandTrackin_module.py
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
+
+cache:
+  paths:
+    - '/root/.cache/pip/**/*'
